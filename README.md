@@ -69,6 +69,10 @@ Alternatively, you can set any `pyproject.toml` file in the `curlylint.configPat
 - [yaegassy/coc-htmldjango](https://github.com/yaegassy/coc-htmldjango)
 - [neoclide/coc-html](https://github.com/neoclide/coc-html)
 
+## Known issues I've felt?
+
+When the result of curlylint is parse_error, it may be difficult to understand the connection between the row or column being pointed out and the row or column that actually needs to be corrected. :(
+
 ## Thanks
 
 - [thibaudcolas/curlylint](https://github.com/thibaudcolas/curlylint) | [Web](https://www.curlylint.org/)
