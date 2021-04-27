@@ -71,7 +71,7 @@ Alternatively, you can set any `pyproject.toml` file in the `curlylint.configPat
 
 ## Thanks
 
-- [https://github.com/thibaudcolas/curlylint](https://www.curlylint.org/) | [Web](https://www.curlylint.org/docs/rules/tabindex_no_positive)
+- [thibaudcolas/curlylint](https://github.com/thibaudcolas/curlylint) | [Web](https://www.curlylint.org/)
 
 ## License
 
