@@ -2,9 +2,9 @@
 
 [curlylint](https://github.com/thibaudcolas/curlylint) extension for [coc.nvim](https://github.com/neoclide/coc.nvim)
 
-<img width="780" alt="coc-curlylint-capture" src="https://user-images.githubusercontent.com/188642/116176327-f08c1f00-a74c-11eb-8f45-3bc8a46cec7d.png">
+<img width="780" alt="coc-curlylint-demo" src="https://user-images.githubusercontent.com/188642/116179982-259b7000-a753-11eb-9ea1-61b96658a5a2.gif">
 
-[Curlylint](https://www.curlylint.org/) is an HTML linter for "curly braces" templates, and their HTML.
+[curlylint](https://www.curlylint.org/) is an HTML linter for "curly braces" templates, and their HTML.
 
 ## Install
 
