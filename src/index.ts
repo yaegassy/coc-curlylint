@@ -42,11 +42,11 @@ export async function activate(context: ExtensionContext): Promise<void> {
     }
   }
 
-  // Install "esbonio[lsp]" if it does not exist.
+  // Install "curlylint" if it does not exist.
   if (!curlylintPath) {
     await installWrapper(context);
     if (fs.existsSync(path.join(context.storagePath, 'curlylint', 'venv', 'bin', 'curlylint'))) {
-      curlylintPath = path.join(context.storagePath, 'esbonio', 'venv', 'bin', 'python');
+      curlylintPath = path.join(context.storagePath, 'curlylint', 'venv', 'bin', 'curlylint');
     }
   }
 
