@@ -21,8 +21,8 @@ Plug 'yaegassy/coc-curlylint', {'do': 'yarn install --frozen-lockfile'}
 ## Detect: curlylint
 
 1. `curlylint.commandPath` setting
-1. PATH environment (e.g. system global PATH or venv/bin, etc ...)
-1. builtin: extension-only "venv/bin" (Installation commands are also provided)
+1. PATH environment (e.g. system global PATH or venv, etc ...)
+1. builtin: extension-only "venv" (Installation commands are also provided)
 
 ## Bult-in install
 
@@ -55,6 +55,7 @@ Alternatively, you can set any `pyproject.toml` file in the `curlylint.configPat
 
 - `curlylint.enable`: Enable coc-curlylint extension, default: `true`
 - `curlylint.commandPath`: The path to the curlylint command (Absolute path), default: `""`
+- `curlylint.builtin.pythonPath`: Python 3.x path (Absolute path) to be used for built-in install, default: `""`
 - `curlylint.configPath`: Read configuration from the provided file (Absolute path), default: `""`
 - `curlylint.lintOnOpen`: Lint file on opening, default: `true`
 - `curlylint.lintOnChange`: Lint file on change, default: `true`

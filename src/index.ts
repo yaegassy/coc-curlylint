@@ -1,4 +1,4 @@
-import { commands, ExtensionContext, workspace, window } from 'coc.nvim';
+import { commands, ExtensionContext, workspace, window, WorkspaceConfiguration } from 'coc.nvim';
 
 import fs from 'fs';
 import path from 'path';
@@ -21,32 +21,53 @@ export async function activate(context: ExtensionContext): Promise<void> {
 
   const outputChannel = window.createOutputChannel('curlylint');
 
+  const pythonCommand = getPythonPath(extensionConfig);
+
   subscriptions.push(
     commands.registerCommand('curlylint.install', async () => {
-      await installWrapper(context);
+      await installWrapper(pythonCommand, context);
     })
   );
 
   // MEMO: Priority to detect curlylint
   //
   // 1. curlylint.commandPath setting
-  // 2. PATH environment (e.g. system global PATH or venv/bin, etc ...)
+  // 2. PATH environment (e.g. system global PATH or venv, etc ...)
   // 3. extension venv (buit-in)
   let curlylintPath = extensionConfig.get('commandPath', '');
   if (!curlylintPath) {
     const whichCurlylint = whichCmd('curlylint');
     if (whichCurlylint) {
       curlylintPath = whichCurlylint;
-    } else if (fs.existsSync(path.join(context.storagePath, 'curlylint', 'venv', 'bin', 'curlylint'))) {
-      curlylintPath = path.join(context.storagePath, 'curlylint', 'venv', 'bin', 'curlylint');
+    } else if (
+      fs.existsSync(path.join(context.storagePath, 'curlylint', 'venv', 'Scripts', 'curlylint.exe')) ||
+      fs.existsSync(path.join(context.storagePath, 'curlylint', 'venv', 'bin', 'curlylint'))
+    ) {
+      if (process.platform === 'win32') {
+        curlylintPath = path.join(context.storagePath, 'curlylint', 'venv', 'Scripts', 'curlylint.exe');
+      } else {
+        curlylintPath = path.join(context.storagePath, 'curlylint', 'venv', 'bin', 'curlylint');
+      }
     }
   }
 
   // Install "curlylint" if it does not exist.
   if (!curlylintPath) {
-    await installWrapper(context);
-    if (fs.existsSync(path.join(context.storagePath, 'curlylint', 'venv', 'bin', 'curlylint'))) {
-      curlylintPath = path.join(context.storagePath, 'curlylint', 'venv', 'bin', 'curlylint');
+    if (pythonCommand) {
+      await installWrapper(pythonCommand, context);
+    } else {
+      window.showErrorMessage('python3/python command not found');
+    }
+
+    if (
+      fs.existsSync(path.join(context.storagePath, 'curlylint', 'venv', 'Scripts', 'curlylint.exe')) ||
+      fs.existsSync(path.join(context.storagePath, 'curlylint', 'venv', 'bin', 'curlylint'))
+    ) {
+      if (process.platform === 'win32') {
+        curlylintPath = path.join(context.storagePath, 'curlylint', 'venv', 'Scripts', 'curlylint.exe');
+      } else {
+        curlylintPath = path.join(context.storagePath, 'curlylint', 'venv', 'bin', 'curlylint');
+      }
     }
   }
 
@@ -102,7 +123,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
   }
 }
 
-async function installWrapper(context: ExtensionContext) {
+async function installWrapper(pythonCommand: string, context: ExtensionContext) {
   const msg = 'Install/Upgrade "curlylint"?';
   context.workspaceState;
 
@@ -110,7 +131,7 @@ async function installWrapper(context: ExtensionContext) {
   ret = await window.showQuickpick(['Yes', 'Cancel'], msg);
   if (ret === 0) {
     try {
-      await curlylintInstall(context);
+      await curlylintInstall(pythonCommand, context);
     } catch (e) {
       return;
     }
@@ -125,4 +146,29 @@ function whichCmd(cmd: string): string {
   } catch (error) {
     return '';
   }
+}
+
+function getPythonPath(config: WorkspaceConfiguration): string {
+  let pythonPath = config.get<string>('builtin.pythonPath', '');
+  if (pythonPath) {
+    return pythonPath;
+  }
+
+  try {
+    which.sync('python3');
+    pythonPath = 'python3';
+    return pythonPath;
+  } catch (e) {
+    // noop
+  }
+
+  try {
+    which.sync('python');
+    pythonPath = 'python';
+    return pythonPath;
+  } catch (e) {
+    // noop
+  }
+
+  return pythonPath;
 }

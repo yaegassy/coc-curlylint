@@ -10,22 +10,28 @@ import { CURLYLINT_VERSION } from './constant';
 
 const exec = util.promisify(child_process.exec);
 
-export async function curlylintInstall(context: ExtensionContext): Promise<void> {
+export async function curlylintInstall(pythonCommand: string, context: ExtensionContext): Promise<void> {
   const pathVenv = path.join(context.storagePath, 'curlylint', 'venv');
-  const pathPip = path.join(pathVenv, 'bin', 'pip');
+
+  let pathVenvPython = path.join(context.storagePath, 'curlylint', 'venv', 'bin', 'python');
+  if (process.platform === 'win32') {
+    pathVenvPython = path.join(context.storagePath, 'curlylint', 'venv', 'Scripts', 'python');
+  }
 
   const statusItem = window.createStatusBarItem(0, { progress: true });
   statusItem.text = `Install curlylint...`;
   statusItem.show();
 
-  const installCmd = `python3 -m venv ${pathVenv} && ` + `${pathPip} install -U pip curlylint==${CURLYLINT_VERSION}`;
+  const installCmd =
+    `${pythonCommand} -m venv ${pathVenv} && ` +
+    `${pathVenvPython} -m pip install -U pip curlylint==${CURLYLINT_VERSION}`;
 
   rimraf.sync(pathVenv);
   try {
-    window.showWarningMessage(`Install curlylint...`);
+    window.showMessage(`Install curlylint...`);
     await exec(installCmd);
     statusItem.hide();
-    window.showWarningMessage(`curlylint: installed!`);
+    window.showMessage(`curlylint: installed!`);
   } catch (error) {
     statusItem.hide();
     window.showErrorMessage(`curlylint: install failed. | ${error}`);
