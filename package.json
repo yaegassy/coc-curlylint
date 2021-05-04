@@ -74,6 +74,11 @@
           "default": "",
           "description": "The path to the curlylint command (Absolute path)"
         },
+        "curlylint.builtin.pythonPath": {
+          "type": "string",
+          "default": "",
+          "description": "Python 3.x path (Absolute path) to be used for built-in install"
+        },
         "curlylint.configPath": {
           "type": "string",
           "default": "",
